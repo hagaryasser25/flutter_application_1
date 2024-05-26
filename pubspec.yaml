@@ -41,6 +41,10 @@ dependencies:
   flutter_bloc: ^8.1.5
   smooth_page_indicator: ^1.1.0
   flutter_svg: ^2.0.10+1
+  conditional_builder_null_safety: ^0.0.6
+  flutter_riverpod: ^2.5.1
+  flutter_langdetect: ^0.0.1
+  devicelocale: ^0.7.1
 
 dev_dependencies:
   flutter_test:

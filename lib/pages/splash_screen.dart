@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/home_view.dart';
 import 'package:flutter_application_1/pages/on_boarding_screen.dart';
 import 'package:lottie/lottie.dart';
 
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ..duration = composition.duration
                 ..forward().whenComplete(() => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OnBoardingScreen()),
+                      MaterialPageRoute(builder: (context) => HomeView()),
                     ));
             },
               ),

@@ -1,16 +1,38 @@
+import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/consts/constant.dart';
 import 'package:flutter_application_1/cubit/observer.dart';
 import 'package:flutter_application_1/cubit/on_boarding_cubit.dart';
 import 'package:flutter_application_1/cubit/on_boarding_state.dart';
 import 'package:flutter_application_1/dio/dio_helper.dart';
 import 'package:flutter_application_1/pages/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+import 'dart:io' show Platform;
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = MyBlocObserver();
+void main() async {
   DioHelper.init();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+
+  languageCode = Platform.localeName.split('_')[0];
+  String countryCode = Platform.localeName.split('_')[1];
+  print(languageCode! + " " + countryCode);
+/*
+  await langdetect
+      .initLangDetect(); // This is needed once in your application after ensureInitialized()
+
+  String text = 'Hello, world!';
+  language = langdetect.detect(text);
+  print('Detected language: $language'); // -> "en"
+
+  final probs = langdetect.detectLangs(text);
+  for (final p in probs) {
+    print("Language: ${p.lang}"); // -> "en"
+    print("Probability: ${p.prob}"); // -> 0.9999964132193504
+  }
+  */
 }
 
 class MyApp extends StatelessWidget {

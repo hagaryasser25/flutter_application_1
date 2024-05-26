@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/components/dark_button.dart';
 import 'package:flutter_application_1/cubit/on_boarding_cubit.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_application_1/styles/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -25,73 +25,57 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
     bool isLast = false;
     return BlocProvider(
-      create: (BuildContext context) => OnBoardingCubit(),
+      create: (BuildContext context) => OnBoardingCubit()..getOnBoarding(),
       child: BlocConsumer<OnBoardingCubit, OnBoardingState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        var cubit = OnBoardingCubit.get(context);
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                
-                Expanded(
-                    child: PageView.builder(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var cubit = OnBoardingCubit.get(context);
+          return Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ConditionalBuilder(
+                      condition: cubit.onBoardingModel != null,
+                      builder: (context) => PageView.builder(
                         controller: boardController,
                         onPageChanged: (int index) {
-                          if (index == cubit.onBoardingModel!.data!.length - 1) {
+                          if (index == cubit.onBoardingModel!.data.length - 1) {
                             setState(() {
                               isLast = true;
+                              print('isLast');
                             });
                           } else {
                             setState(() {
                               isLast = false;
+                              print('notLast');
                             });
                           }
                         },
-                        itemCount: cubit.onBoardingModel!.data!.length,
+                        itemCount: cubit.onBoardingModel!.data.length,
                         itemBuilder: (context, index) {
-                          return BuildBoradingItem(
-                              cubit.onBoardingModel!.data![index],
-                              boardController,
-                              cubit.onBoardingModel!.data!.length);
-                        })),
-                SizedBox(
-                  height: size.height / 5,
-                ),
-                isLast == true
-                    ? Column(
-                        children: [
-                          DarkButton(
-                            txt: 'تسجيل حساب',
-                            buttonWidth: size.height / 3,
-                            buttonHeight: 40,
-                            onPress: () {
-                             
-                            },
-                          ),
-                          DarkButton(
-                            txt: 'تسجيل الدخول',
-                            buttonWidth: size.height / 3,
-                            buttonHeight: 40,
-                            onPress: () {
-                              
-                            },
-                          ),
-                        ],
-                      )
-                    : DarkButton(
-                        txt: 'متابعــــــة',
-                        buttonWidth: size.height / 3,
-                        buttonHeight: 40,
-                        onPress: () {
-                          boardController.nextPage(
-                              duration: Duration(milliseconds: 750),
-                              curve: Curves.fastLinearToSlowEaseIn);
+                          return
+                           buildBoardingItem(
+                            cubit.onBoardingModel!.data[index],
+                            boardController,
+                            cubit.onBoardingModel!.data.length,
+                            isLast
+                          );
                         },
-                      )
-                /*
+                      ),
+                      fallback: (context) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height / 5,
+                  ),
+             
+                  
+
+                  /*
                 DarkButton(
                   txt: 'متابعــــــة',
                   buttonWidth: size.height / 3,
@@ -108,22 +92,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   },
                 ),
                 */
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    ),
-      ); 
-    
+          );
+        },
+      ),
+    );
   }
 }
 
-Widget BuildBoradingItem(OnBoardingData model, var boardController, int length) {
+Widget buildBoardingItem(
+    OnBoardingData model, var boardController, int length, bool isLast) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Expanded(child: SvgPicture.network('${model.image}')),
+      Expanded(
+        child: SvgPicture.network(
+          '${model.image}',
+        ),
+      ),
       Row(children: [
         SmoothPageIndicator(
           controller: boardController,
@@ -136,10 +124,10 @@ Widget BuildBoradingItem(OnBoardingData model, var boardController, int length) 
           ),
         ),
       ]),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       Text(
         '${model.title}',
-        style: TextStyle(
+        style: const TextStyle(
           color: DarkGrey,
           fontSize: 18,
           fontFamily: 'Almarai-Regular',
@@ -147,12 +135,12 @@ Widget BuildBoradingItem(OnBoardingData model, var boardController, int length) 
           height: 1.10,
         ),
       ),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       Text(
         '${model.subtitle}',
-        style: TextStyle(
+        style: const TextStyle(
           color: Grey,
           fontSize: 17,
           fontFamily: 'Almarai-Regular',
@@ -160,6 +148,9 @@ Widget BuildBoradingItem(OnBoardingData model, var boardController, int length) 
           height: 1.10,
         ),
       ),
+      isLast == false
+                      ? ElevatedButton(onPressed: () {}, child: Text('hagar'))
+                      : ElevatedButton(onPressed: () {}, child: Text('salma'))
     ],
   );
 }
